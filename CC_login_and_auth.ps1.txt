@@ -1,0 +1,26 @@
+# Use TLS1.2 certificate
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
+# Define the API endpoint URL for login
+$loginUrl = 'http://uvo1qjxwdedojk0ni32.vm.cld.sr/masking/api/v5.1.31/login'
+
+# Define the login request body
+$loginBody = @{
+    username = 'admin'
+    password = 'Delphix_123!'
+} | ConvertTo-Json
+
+# Define the request headers for login
+$headers = @{
+    'accept' = 'application/json'
+    'Content-Type' = 'application/json'
+}
+
+# Make the API request to login
+$loginResponse = Invoke-RestMethod -Uri $loginUrl -Method Post -Body $loginBody -Headers $headers
+
+# Extract the authorization token from the login response
+$authorization = $loginResponse.Authorization
+
+# Output the authorization token
+Write-Host "Authorization Token: $authorization"

@@ -1,0 +1,47 @@
+#PowerShell Script to convert log UTC timestamp to local time
+#Local time is the time on the sever this script is run on
+
+
+
+# Get the current time zone of the server
+$timeZone = tzutil /g
+
+# Define the input and output file paths
+$inputFile = "C:\masking_logs_UTC.txt"
+$outputFile = "C:\masking_logs_local.txt"
+
+# Define the format of the timestamps in the log file
+$timestampFormat = "yyyy-MM-ddTHH:mm:ss,fffZ"
+
+# Read the log file
+$logLines = Get-Content -Path $inputFile
+
+# Open the output file for writing
+$outputStream = [System.IO.StreamWriter]::new($outputFile)
+
+foreach ($line in $logLines) {
+    # Extract the timestamp from the line
+    if ($line -match "\b\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2},\d{3}Z\b") {
+        $utcTimestamp = $matches[0]
+
+        # Parse the UTC timestamp
+        $utcTime = [datetime]::ParseExact($utcTimestamp, $timestampFormat, $null)
+
+        # Convert to local time
+        $localTime = [System.TimeZoneInfo]::ConvertTimeBySystemTimeZoneId($utcTime, $timeZone)
+
+        # Replace the UTC timestamp with the local time in the line
+        $localTimestamp = $localTime.ToString("yyyy-MM-ddTHH:mm:ss,fff")
+        $line = $line -replace [regex]::Escape($utcTimestamp), $localTimestamp
+    }
+
+    # Write the updated line to the output file
+    $outputStream.WriteLine($line)
+}
+
+# Close the output file stream
+$outputStream.Close()
+
+Write-Host "Log conversion complete. Converted log saved to $outputFile"
+
+

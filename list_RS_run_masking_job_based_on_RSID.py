@@ -1,11 +1,24 @@
+###################################################################################################################
+# Delphix Corp (2024)
+# Author    : Aaron Tully
+# Date      : July 2024
+# Script    : list_RS_run_masking_job_based_onRSID.py
+# Version   : v1
+# Interactive Menu: Presents an interactive menu with three options.
+# 1. Create Masking Job: Prompts the user for a ruleset ID to create a new masking job with the same name as the RuleSet.
+# 2. List Existing Rulesets: Retrieves and displays a list of existing rulesets with their IDs and names.
+# 3. Exit: Exits the script.
+
+##################################################################################################################
 import requests
 import json
 
 # Define the API URLs
-login_url = 'http://uvo1gukczfceqn0kxdm.vm.cld.sr/masking/api/v5.1.33/login'
-rulesets_url = 'http://uvo1gukczfceqn0kxdm.vm.cld.sr/masking/api/v5.1.33/database-rulesets?page_number=1'
-create_masking_job_url = 'http://uvo1gukczfceqn0kxdm.vm.cld.sr/masking/api/v5.1.33/masking-jobs'
-masking_jobs_url = 'http://uvo1gukczfceqn0kxdm.vm.cld.sr/masking/api/v5.1.33/masking-jobs?page_number=1'
+# Replace <ENGINE_ENGINE_URL> with your actual values
+login_url = 'http://<MASKING_ENGINE_URL>/masking/api/v5.1.33/login'
+rulesets_url = 'http://<MASKING_ENGINE_URL>/masking/api/v5.1.33/database-rulesets?page_number=1'
+create_masking_job_url = 'http://<MASKING_ENGINE_URL>/masking/api/v5.1.33/masking-jobs'
+masking_jobs_url = 'http://<MASKING_ENGINE_URL>/masking/api/v5.1.33/masking-jobs?page_number=1'
 
 # Define the request headers
 headers = {
@@ -14,9 +27,10 @@ headers = {
 }
 
 # Define the request body for the login with hardcoded credentials
+# Replace USERNAME, and PASSWORD with your actual values
 login_data = {
-    'username': 'admin',
-    'password': 'Delphix_123!'
+    'username': 'USERNAME',
+    'password': 'PASSWORD'
 }
 
 # Function to login and get the auth token
